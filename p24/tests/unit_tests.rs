@@ -1,5 +1,3 @@
-// use p24::refs;
-
 #[test]
 
 pub fn test_f1() {
