@@ -119,7 +119,7 @@ impl<'a> Bank<'a> {
                 false => bank_assets += bank_users[i].credit_line,
             }
 
-            i = i + 1;
+            i += 1;
         }
         (bank_liabilities, bank_assets)
     }
@@ -133,7 +133,7 @@ impl<'a> Bank<'a> {
                 false => Err(String::from("Your balance is not sufficient")),
                 true => {
                     user1.balance = user0.balance;
-                    user0.balance = user0.balance - (amount as i64);
+                    user0.balance -= amount as i64;
                     Ok(())
                 }
             },
@@ -146,11 +146,11 @@ impl<'a> Bank<'a> {
         match user.balance > 0 {
             false => {
                 credit_interest = (self.credit_interest as i64) * user.balance;
-                user.balance = user.balance + credit_interest
+                user.balance += credit_interest
             }
             true => {
-                balance_interest = (self.debit_interest as i64) * user.balance;
-                user.balance = user.balance + balance_interest
+                balance_interest = self.debit_interest * user.balance;
+                user.balance += balance_interest
             }
         }
     }
