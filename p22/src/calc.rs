@@ -1,13 +1,38 @@
+// Conversion from celsius to  farenheit:
+/// Given a value in celsius, return the corresponding value in farenheit
+///
+/// # Example
+///
+/// ```
+/// assert_eq!(104, p22::calc::celsius2farenheit(40));
+/// ```
+
 pub fn celsius2farenheit(celsius: i32) -> i32 {
     let farenheit: i32 = (celsius * 9 / 5) + 32;
-    return farenheit;
+    farenheit
 }
+
+// Conversion from farenheit to celsius:
+/// Given a value in farenheit, return the corresponding value in celsius
+///
+/// # Example
+///
+/// ```
+/// assert_eq!(25, p22::calc::farenheit2celsius(77));
+/// ```
 
 pub fn farenheit2celsius(farenheit: i32) -> i32 {
     let celsius: i32 = (farenheit - 32) * 5 / 9;
-    return celsius;
+    celsius
 }
 
+// Compute fibonnacci of a given integer:
+///
+/// # Example
+///
+/// ```
+/// assert_eq!(21, p22::calc::fibonacci_loop(8));
+/// ```
 pub fn fibonacci_loop(n: u32) -> u64 {
     if n == 0 {
         return 0;
@@ -24,24 +49,22 @@ pub fn fibonacci_loop(n: u32) -> u64 {
         fibonacci_number = f0 + f1;
         f0 = f1;
         f1 = fibonacci_number;
-        mycounter = mycounter + 1;
+        mycounter += 1;
     }
-    return fibonacci_number;
+    fibonacci_number
 }
 
+// Compute fibonnacci of a given integer recursively:
+///
+/// # Example
+///
+/// ```
+/// assert_eq!(21, p22::calc::fibonacci_rec(8));
+/// ```
 pub fn fibonacci_rec(n: u32) -> u64 {
     match n {
-        0 => return 0,
-        1 => return 1,
-        _ => return fibonacci_rec(n - 2) + fibonacci_rec(n - 1),
+        0 => 0,
+        1 => 1,
+        _ => fibonacci_rec(n - 2) + fibonacci_rec(n - 1),
     }
 }
-
-// recursive fibonacci
-// fn fibonacci(n: usize) -> u32 {
-//     if n < 2 {
-//         1
-//     } else {
-//         fibonacci(n - 1) + fibonacci(n - 2)
-//     }
-// }
