@@ -1,28 +1,8 @@
-use std::fmt;
-
-// type Result<T> = std::result::Result<T, HitBalanceError>;
-
-// #[derive(Debug, Clone)]
-// pub struct HitBalanceError;
-
-// impl fmt::Display for HitBalanceError {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         write!(f, "You cannot transfer more than you current balance")
-//     }
-// }
-
-// #[derive(Debug)]
 #[derive(Debug, Clone)]
 pub struct User {
     name: String,
     credit_line: u64,
     balance: i64,
-}
-
-impl fmt::Display for User {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Wecome:")
-    }
 }
 
 // #[derive(Debug)]
@@ -144,18 +124,6 @@ impl<'a> Bank<'a> {
         (bank_liabilities, bank_assets)
     }
 
-    // fn transfer_funds(users: (User, User), amount: u64) -> Result<()>  {
-    //     let user0: User = users.0;
-    //     let mut user1: User = users.1;
-    //     if user0.balance < amount {
-    //         Err(HitBalanceError)
-    //         //panic!("You cannot transfer more than you current balance: balance = {} -- amount = {}",user0.balance,  amount);
-    //     } else {
-    //         user1.balance = user0.balance ;
-    //         Ok(())
-    //     }
-    // }
-
     pub fn transfer_funds(&self, users: (User, User), amount: u64) -> Result<(), String> {
         let mut user0: User = users.0;
         let mut user1: User = users.1;
@@ -171,29 +139,23 @@ impl<'a> Bank<'a> {
             },
         }
     }
-    pub fn accrue_interest(&self, users: (User, User), amount: u64) -> Result<(), String> {
-        let mut user0: User = users.0;
-        let mut user1: User = users.1;
-        match user0.balance > 0 {
-            false => Err(String::from("Your balance is not sufficient")),
-            true => match user0.balance as u64 > amount {
-                false => Err(String::from("Your balance is not sufficient")),
-                true => {
-                    user1.balance = user0.balance;
-                    user0.balance = user0.balance - (amount as i64);
-                    Ok(())
-                }
-            },
+    pub fn accrue_interest(&self, user: User) {
+        let mut user: User = user;
+        let balance_interest: i64;
+        let credit_interest: i64;
+        match user.balance > 0 {
+            false => {
+                credit_interest = (self.credit_interest as i64) * user.balance;
+                user.balance = user.balance + credit_interest
+            }
+            true => {
+                balance_interest = (self.debit_interest as i64) * user.balance;
+                user.balance = user.balance + balance_interest
+            }
         }
     }
+    pub fn merge_bank(&mut self, bank_to_be_merged: &mut Bank) {
+        println!("{:?}", bank_to_be_merged);
+        todo!()
+    }
 }
-
-// fn divide(a: i32, b: i32) -> Result<i32, String> {
-//     if b == 0 {
-//         Err(String::from("division by zero"))
-//     } else {
-//         Ok(a / b)
-//     }
-// }
-
-// Ok(`, `)
