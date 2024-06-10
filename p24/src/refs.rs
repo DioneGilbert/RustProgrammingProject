@@ -6,26 +6,22 @@ pub fn f1(s: &mut (u32, u32), flag: bool) -> &mut u32 {
 }
 
 pub fn f2(s: &mut [u32], length: usize) -> &mut u32 {
-    if length == 0 {
-        return &mut s[0];
-    }
-    &mut s[length - 1]
+    &mut s[length]
 }
 
 pub fn f3(s: &mut [u32], length: usize) -> &mut u32 {
-    if length == 0 {
-        return &mut s[s.len() - 1];
-    }
-    &mut s[s.len() - length]
+    &mut s[s.len() - length - 1]
 }
 
-pub fn f4(s: &mut [u32]) -> &[[u32; 4]] {
-    let number_of_slices = s.len() / 4;
-    let blocks_of_slices: &mut [[u32; 4]] = &mut [];
-    let mut intermediate_slice: [u32; 4] = [0, 0, 0, 0];
-    for i in 0..number_of_slices {
-        intermediate_slice.clone_from_slice(&s[4 * i..4 * (i + 1)]);
-        blocks_of_slices[i].clone_from_slice(&intermediate_slice);
+pub fn f4(s: &mut [u32]) -> [&[u32]; 4] {
+    let slice_length: usize = s.len() / 4;
+    let mut result_slices: [&[u32]; 4] = [&[]; 4];
+    if s.len() < 4 {
+        result_slices = [&[], &[], &[], s]
     }
-    blocks_of_slices
+    for i in 0..3 {
+        result_slices[i] = &s[slice_length * i..slice_length * (i + 1)];
+    }
+    result_slices[3] = &s[3 * slice_length..];
+    result_slices
 }
