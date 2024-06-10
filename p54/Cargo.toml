@@ -1,0 +1,8 @@
+[package]
+name = "p54"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ring = "0.16.6"
+openssl = "0.10.64"
