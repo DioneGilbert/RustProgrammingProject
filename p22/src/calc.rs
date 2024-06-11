@@ -8,8 +8,7 @@
 /// ```
 
 pub fn celsius2farenheit(celsius: i32) -> i32 {
-    let farenheit: i32 = (celsius * 9 / 5) + 32;
-    farenheit
+    (celsius * 9 / 5) + 32
 }
 
 // Conversion from farenheit to celsius:
@@ -72,7 +71,7 @@ pub fn fibonacci_rec(n: u32) -> u64 {
 #[cfg(test)]
 
 mod tests {
-    use crate::calc::{celsius2farenheit, farenheit2celsius, fibonacci_loop, fibonacci_rec};
+    use super::{celsius2farenheit, farenheit2celsius, fibonacci_loop, fibonacci_rec};
     #[test]
     fn tests_celsius2farenheit() {
         let celsius: i32 = 40;
