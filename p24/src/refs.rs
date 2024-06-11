@@ -27,7 +27,7 @@ pub fn f4(s: &[u32]) -> [&[u32]; 4] {
 
 #[cfg(test)]
 mod tests {
-    use crate::refs::{f1, f2, f3, f4};
+    use super::{f1, f2, f3, f4};
     #[test]
 
     pub fn test_f1() {
