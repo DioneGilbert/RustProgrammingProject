@@ -109,20 +109,20 @@ mod tests {
         let bottom_right: Point = Point { x: 6.0, y: 1.0 };
 
         let rectangle: Rectangle = Rectangle {
-            top_left: top_left,
-            bottom_right: bottom_right,
+            top_left,
+            bottom_right,
         };
         assert_eq!((14.0, 12.0), rectangle_perimeter_and_area(rectangle));
     }
 
     #[test]
     fn test_circle() {
-        let center: Point = Point { x: 2.0, y: 4.0 };
+        let center_pointer: Point = Point { x: 2.0, y: 4.0 };
         let radius: f32 = 3_f32;
 
         let circle: Circle = Circle {
-            _center: center,
-            radius: radius,
+            _center: center_pointer,
+            radius,
         };
         assert_eq!(
             (std::f32::consts::PI * 6.0, std::f32::consts::PI * 9.0),
@@ -158,7 +158,7 @@ mod tests {
         let radius: f32 = 3_f32;
         let circle: Circle = Circle {
             _center: point2.clone(),
-            radius: radius,
+            radius,
         };
         let shape3: Shape = Shape::Circle(circle);
         assert_eq!(
