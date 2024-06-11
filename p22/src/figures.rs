@@ -6,7 +6,7 @@ pub struct Point {
 
 #[derive(Debug, Clone)]
 pub struct Circle {
-    center: Point,
+    _center: Point,
     radius: f32,
 }
 
@@ -17,144 +17,155 @@ pub struct Triangle {
 
 #[derive(Debug, Clone)]
 pub struct Rectangle {
-    points: [Point; 4],
+    top_left: Point,
+    bottom_right: Point,
 }
 
 #[derive(Debug, Clone)]
 pub enum Shape {
-    Point,
-    Circle,
-    Triangle,
-    Rectangle,
+    Point(Point),
+    Circle(Circle),
+    Triangle(Triangle),
+    Rectangle(Rectangle),
 }
 
-pub trait Distance {
-    fn distance_between_2_points(&self, points: [Point; 2]) -> f32;
+fn distance_between_2_points(points: [Point; 2]) -> f32 {
+    let point0: Point = points[0].clone();
+    let point1: Point = points[1].clone();
+    let distance: f32 = ((point1.x - point0.x) * (point1.x - point0.x)
+        + (point1.y - point0.y) * (point1.y - point0.y))
+        .sqrt();
+    distance
 }
 
-pub trait RectangleDimensions {
-    fn get_width(&self) -> i32;
-    fn get_length(&self) -> i32;
+pub fn circle_perimeter_and_area(figure: Circle) -> (f32, f32) {
+    let perimeter: f32 = std::f32::consts::PI * (figure.radius * 2.0);
+    let area: f32 = std::f32::consts::PI * figure.radius * figure.radius;
+    (perimeter, area)
 }
 
-pub trait TriangleHeight {
-    fn get_height(&self) -> i32;
+pub fn triangle_perimeter_and_area(figure: Triangle) -> (f32, f32) {
+    let points = figure.points;
+    let point1 = &points[0];
+    let point2 = &points[1];
+    let point3 = &points[2];
+
+    let side1 = distance_between_2_points([point1.clone(), point2.clone()]);
+    let side2 = distance_between_2_points([point1.clone(), point3.clone()]);
+    let side3 = distance_between_2_points([point2.clone(), point3.clone()]);
+    let perimeter = side1 + side2 + side3;
+    let semi_per = perimeter / 2_f32;
+    let area: f32 =
+        (semi_per * (semi_per - side1) * (semi_per - side2) * (semi_per - side3)).sqrt();
+    (perimeter, area)
 }
 
-impl TriangleHeight for Triangle {
-    fn get_height(&self) -> i32 {
-        todo!()
+pub fn point_perimeter_and_area(_point: Point) -> (f32, f32) {
+    (0_f32, 0_f32)
+}
+
+pub fn rectangle_perimeter_and_area(figure: Rectangle) -> (f32, f32) {
+    let top_left = figure.top_left;
+    let bottom_right = figure.bottom_right;
+    let height: f32 = top_left.y - bottom_right.y;
+    let width: f32 = bottom_right.x - top_left.x;
+    let perimeter = (height + width) * 2_f32;
+    let area: f32 = height * width;
+    (perimeter, area)
+}
+
+pub fn shape_perimeter_and_area(shape: Shape) -> (f32, f32) {
+    match shape {
+        Shape::Circle(circle) => circle_perimeter_and_area(circle),
+        Shape::Point(point) => point_perimeter_and_area(point),
+        Shape::Triangle(triangle) => triangle_perimeter_and_area(triangle),
+        Shape::Rectangle(rectangle) => rectangle_perimeter_and_area(rectangle),
     }
 }
 
-pub trait CirclePerimeter {
-    fn get_circle_perimeter(&self) -> f32;
-}
+#[cfg(test)]
 
-impl CirclePerimeter for Circle {
-    fn get_circle_perimeter(&self) -> f32 {
-        todo!()
-    }
-}
+mod tests {
+    use crate::figures::{
+        circle_perimeter_and_area, point_perimeter_and_area, rectangle_perimeter_and_area,
+        shape_perimeter_and_area, triangle_perimeter_and_area, Circle, Rectangle, Shape,
+    };
 
-pub trait Area {
-    fn area(&self, shape: Shape) -> f32;
-}
-
-impl Area for Shape {
-    fn area(&self, _shape: Shape) -> f32 {
-        todo!()
-    }
-}
-
-pub trait Perimeter {
-    fn perimter(&self, item: &impl Distance, shape: Shape) -> f32;
-    //println!("Breaking news! {}", item.distance_between_2_points(points));
-}
-
-impl Perimeter for Shape {
-    fn perimter(&self, item: &impl Distance, shape: Shape) -> f32 {
-        let _ = item;
-        let _ = shape;
-        todo!()
-    }
-}
-
-pub trait CompareShapeArea {
-    fn get_shape_with_greater_area(&self, shapes: &[Shape]) -> &[Shape];
-}
-
-impl Distance for Point {
-    fn distance_between_2_points(&self, points: [Point; 2]) -> f32 {
-        let point0: Point = points[0].clone();
-        let point1: Point = points[1].clone();
-        let distance: f32 = ((point1.x - point0.x) * (point1.x - point0.x)
-            + (point1.y - point0.y) * (point1.y - point0.y))
-            .sqrt();
-        distance
-    }
-}
-
-impl RectangleDimensions for Rectangle {
-    fn get_length(&self) -> i32 {
-        todo!()
-    }
-    fn get_width(&self) -> i32 {
-        todo!()
-    }
-}
-
-impl Circle {
-    pub fn new(center: Point, radius: f32) -> Self {
-        Self { center, radius }
-    }
-    pub fn area(&self) -> f32 {
-        std::f32::consts::PI * (self.radius * self.radius)
+    use super::{Point, Triangle};
+    #[test]
+    fn test_triangle() {
+        let point1: Point = Point { x: 2.0, y: 1.0 };
+        let point2: Point = Point { x: 2.0, y: 4.0 };
+        let point3: Point = Point { x: 6.0, y: 1.0 };
+        let triangle: Triangle = Triangle {
+            points: [point1, point2, point3],
+        };
+        assert_eq!((12.0, 6.0), triangle_perimeter_and_area(triangle));
     }
 
-    pub fn perimter(&self) -> f32 {
-        // println:  just to avoid the warnings for now.
-        println!("{:?}", self.center);
-        std::f32::consts::PI * self.radius * (2_f32)
-    }
-}
+    #[test]
+    fn test_rectangle() {
+        let top_left: Point = Point { x: 2.0, y: 4.0 };
+        let bottom_right: Point = Point { x: 6.0, y: 1.0 };
 
-impl Point {
-    pub fn new(x: f32, y: f32) -> Self {
-        Self { x, y }
-    }
-
-    pub fn distance_from(&self, point: Point) -> f32 {
-        self.distance_between_2_points([self.clone(), point])
-    }
-}
-
-impl Triangle {
-    pub fn new(points: [Point; 3]) -> Self {
-        Self { points }
-    }
-    pub fn area(&self) -> f32 {
-        todo!()
+        let rectangle: Rectangle = Rectangle {
+            top_left: top_left,
+            bottom_right: bottom_right,
+        };
+        assert_eq!((14.0, 12.0), rectangle_perimeter_and_area(rectangle));
     }
 
-    pub fn perimter(&self) -> f32 {
-        // println:  just to avoid the warnings for now.
-        println!("{:?}", self.points);
-        todo!()
-    }
-}
+    #[test]
+    fn test_circle() {
+        let center: Point = Point { x: 2.0, y: 4.0 };
+        let radius: f32 = 3_f32;
 
-impl Rectangle {
-    pub fn new(points: [Point; 4]) -> Self {
-        Self { points }
-    }
-    pub fn area(&self) -> f32 {
-        todo!()
+        let circle: Circle = Circle {
+            _center: center,
+            radius: radius,
+        };
+        assert_eq!(
+            (std::f32::consts::PI * 6.0, std::f32::consts::PI * 9.0),
+            circle_perimeter_and_area(circle)
+        );
     }
 
-    pub fn perimter(&self) -> f32 {
-        // println:  just to avoid the warnings for now.
-        println!("{:?}", self.points);
-        todo!()
+    #[test]
+    fn test_point() {
+        let point: Point = Point { x: 2.0, y: 4.0 };
+        assert_eq!((0.0, 0.0), point_perimeter_and_area(point));
+    }
+
+    #[test]
+    fn test_shape() {
+        let point1: Point = Point { x: 2.0, y: 1.0 };
+        let point2: Point = Point { x: 2.0, y: 4.0 };
+        let point3: Point = Point { x: 6.0, y: 1.0 };
+        let triangle: Triangle = Triangle {
+            points: [point1.clone(), point2.clone(), point3.clone()],
+        };
+        let shape1: Shape = Shape::Triangle(triangle);
+
+        assert_eq!((12.0, 6.0), shape_perimeter_and_area(shape1));
+
+        let rectangle: Rectangle = Rectangle {
+            top_left: point2.clone(),
+            bottom_right: point3.clone(),
+        };
+        let shape2: Shape = Shape::Rectangle(rectangle);
+        assert_eq!((14.0, 12.0), shape_perimeter_and_area(shape2));
+
+        let radius: f32 = 3_f32;
+        let circle: Circle = Circle {
+            _center: point2.clone(),
+            radius: radius,
+        };
+        let shape3: Shape = Shape::Circle(circle);
+        assert_eq!(
+            (std::f32::consts::PI * 6.0, std::f32::consts::PI * 9.0),
+            shape_perimeter_and_area(shape3)
+        );
+        let shape4: Shape = Shape::Point(point1.clone());
+        assert_eq!((0.0, 0.0), shape_perimeter_and_area(shape4));
     }
 }

@@ -68,3 +68,37 @@ pub fn fibonacci_rec(n: u32) -> u64 {
         _ => fibonacci_rec(n - 2) + fibonacci_rec(n - 1),
     }
 }
+
+#[cfg(test)]
+
+mod tests {
+    use crate::calc::{celsius2farenheit, farenheit2celsius, fibonacci_loop, fibonacci_rec};
+    #[test]
+    fn tests_celsius2farenheit() {
+        let celsius: i32 = 40;
+        let farenheit: i32 = 104;
+        assert_eq!(farenheit, celsius2farenheit(celsius));
+    }
+    #[test]
+    fn tests_farenheit2celsius() {
+        let celsius: i32 = 25;
+        let farenheit: i32 = 77;
+        assert_eq!(celsius, farenheit2celsius(farenheit));
+    }
+
+    #[test]
+    fn tests_fibonacci_loop() {
+        let number: u32 = 8;
+        let fib_number: u64 = 21;
+        assert_eq!(fib_number, fibonacci_loop(number));
+        assert_eq!(13, fibonacci_loop(7));
+    }
+
+    #[test]
+    fn tests_fibonacci_rec() {
+        let number: u32 = 8;
+        let fib_number: u64 = 21;
+        assert_eq!(fib_number, fibonacci_rec(number));
+        assert_eq!(13, fibonacci_loop(7));
+    }
+}
