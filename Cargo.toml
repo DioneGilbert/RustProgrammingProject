@@ -3,4 +3,6 @@ resolver = "2"
 members = [
     "p12",
     "p32",
+    "p24",
+    "p22",
 ]
