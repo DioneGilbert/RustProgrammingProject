@@ -154,6 +154,7 @@ impl<'a> Bank<'a> {
             }
         }
     }
+
     pub fn merge_bank(&mut self, bank_to_be_merged: &mut Bank) {
         println!("{:?}", bank_to_be_merged);
         todo!()
